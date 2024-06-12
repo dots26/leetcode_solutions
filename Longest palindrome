@@ -4,11 +4,13 @@ public:
         string longestPalindromeString = string() ;
         string foundPalindrome = string() ;
         int longestPalindromeLength = 0 ;
+        int palindromeLength = 0 ;
         for(int i = 0 ; i < s.length() ; i++){
-            foundPalindrome = longestPalindrome(s, i, longestPalindromeLength) ;
-            if (foundPalindrome.length() > longestPalindromeLength){
+            foundPalindrome = longestPalindrome(s, i, longestPalindromeLength + 1) ;
+            palindromeLength = foundPalindrome.length() ;
+            if (palindromeLength > longestPalindromeLength){
                 longestPalindromeString = foundPalindrome ;
-                longestPalindromeLength = foundPalindrome.length() ;
+                longestPalindromeLength = palindromeLength ;
             }
             if (longestPalindromeLength > s.length() - i ){
                 break ;
@@ -23,13 +25,14 @@ public:
         string currentString ;
 
         if (minimumLength > s.length()){
-            return longestPalindromeString ;
+            return string() ;
         } 
 
-        for (int i = max(minimumLength,1) ; i <= s.length() - startingPoint ; i++){
+        for (int i = s.length() - startingPoint ; i >= max(minimumLength,1) ; i--){
             currentString = s.substr(startingPoint,i) ;
             if(isPalindrome(currentString)){
                 longestPalindromeString = currentString ;
+                break ;
             }
         }
         return longestPalindromeString ;
