@@ -1,0 +1,50 @@
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        string longestPalindromeString = string() ;
+        string foundPalindrome = string() ;
+        int longestPalindromeLength = 0 ;
+        for(int i = 0 ; i < s.length() ; i++){
+            foundPalindrome = longestPalindrome(s, i, longestPalindromeLength) ;
+            if (foundPalindrome.length() > longestPalindromeLength){
+                longestPalindromeString = foundPalindrome ;
+                longestPalindromeLength = foundPalindrome.length() ;
+            }
+            if (longestPalindromeLength > s.length() - i ){
+                break ;
+            }
+        }
+
+        return longestPalindromeString ;
+    }
+
+    string longestPalindrome(string s, int startingPoint, int minimumLength) {
+        string longestPalindromeString = string(s.substr(0,1)) ;
+        string currentString ;
+
+        if (minimumLength > s.length()){
+            return longestPalindromeString ;
+        } 
+
+        for (int i = max(minimumLength,1) ; i <= s.length() - startingPoint ; i++){
+            currentString = s.substr(startingPoint,i) ;
+            if(isPalindrome(currentString)){
+                longestPalindromeString = currentString ;
+            }
+        }
+        return longestPalindromeString ;
+    }
+
+    bool isPalindrome(string s){
+        bool isPalindrome = true ;
+        int stringLength = s.length() ;
+        int middlePoint = floor((stringLength-1)/2) ; 
+        for(int i = 0; i <= middlePoint ; i++){
+            if(s.at(i) != s.at(stringLength - i - 1)) {
+                isPalindrome = false ;
+                break ;
+            }
+        }
+        return isPalindrome ;
+    }
+};
