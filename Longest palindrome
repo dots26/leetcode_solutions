@@ -1,12 +1,14 @@
 class Solution {
 public:
     string longestPalindrome(string s) {
-        string longestPalindromeString = string() ;
+        string longestPalindromeString ;
         string foundPalindrome = string() ;
-        int longestPalindromeLength = 0 ;
+        int longestPalindromeLength = 1 ;
         int palindromeLength = 0 ;
-        for(int i = 0 ; i < s.length() ; i++){
-            foundPalindrome = longestPalindrome(s, i, longestPalindromeLength + 1) ;
+
+        longestPalindromeString = longestPalindromeExpansionMethod(s) ;
+        /*for(int i = 0 ; i < s.length() ; i++){
+            foundPalindrome = longestPalindrome(s, i, longestPalindromeLength) ;
             palindromeLength = foundPalindrome.length() ;
             if (palindromeLength > longestPalindromeLength){
                 longestPalindromeString = foundPalindrome ;
@@ -15,7 +17,7 @@ public:
             if (longestPalindromeLength > s.length() - i ){
                 break ;
             }
-        }
+        }*/
 
         return longestPalindromeString ;
     }
@@ -24,7 +26,7 @@ public:
         string longestPalindromeString = string(s.substr(0,1)) ;
         string currentString ;
 
-        if (minimumLength > s.length()){
+        if (minimumLength >= s.length()){
             return string() ;
         } 
 
@@ -35,6 +37,63 @@ public:
                 break ;
             }
         }
+        return longestPalindromeString ;
+    }
+
+    string ExpandRight(string s, int startingPoint, int minimumLength){
+        string newString = s.substr(startingPoint, minimumLength + 1) ; 
+        if(isPalindrome(newString))
+            return newString ;
+        else return s.substr(startingPoint, minimumLength ) ;
+    }
+
+    string ExpandBoth(string s, int startingPoint, int minimumLength){
+        if (startingPoint == 0)
+            return s.substr(startingPoint, minimumLength ) ;
+
+        string newString = s.substr(startingPoint-1, minimumLength + 2) ; 
+        if(isPalindrome(newString))
+            return newString ;
+        else return s.substr(startingPoint, minimumLength ) ;
+    }
+    
+    string longestPalindromeExpansionMethod(string s) {
+        string longestPalindromeString = string(s.substr(0,1)) ;
+        int startingPoint = 0 ; 
+        int minimumLength = 1 ;
+        bool foundLongerPalindrome = false ;
+        if (minimumLength > s.length()){
+            return string() ;
+        } 
+
+        string currentString = s.substr(startingPoint, minimumLength);
+        int longestPalindromeLength = minimumLength ;
+        
+        do{
+            do{
+                currentString = ExpandRight(s, startingPoint, minimumLength) ;
+                if(currentString.length() > longestPalindromeLength) {
+                    longestPalindromeString = currentString ;
+                    longestPalindromeLength++ ;
+                    minimumLength++ ;
+                    foundLongerPalindrome = true ;
+                } else foundLongerPalindrome = false ;
+            }while(foundLongerPalindrome == true) ;
+
+            do{
+                currentString = ExpandBoth(s, startingPoint, minimumLength) ;
+                if(currentString.length() > longestPalindromeLength) {
+                    longestPalindromeString = currentString ;
+                    longestPalindromeLength += 2 ;
+                    minimumLength += 2 ;
+                    startingPoint -= 1 ;
+                    foundLongerPalindrome = true ;
+                } else foundLongerPalindrome = false ;
+            }while(foundLongerPalindrome == true) ;
+            
+            startingPoint += 1 ;
+        }while(startingPoint + 1 + minimumLength <= s.length()) ;
+        
         return longestPalindromeString ;
     }
 
