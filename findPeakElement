@@ -70,18 +70,12 @@ public:
                     }
                 }
             }
+            //prevent infinite loop checking same index over and over again
             if(lowIndex + (highIndex-lowIndex)/2 == midIndex)
                 midIndex++ ;
             else 
                 midIndex = lowIndex + (highIndex-lowIndex)/2 ;
         }
         return ceil(lowIndex + highIndex)/2 ;
-    }
-
-    int max(int a, int b){
-        if (a<b)
-            return b;
-        else
-            return a;
     }
 };
