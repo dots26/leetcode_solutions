@@ -1,0 +1,87 @@
+class Solution {
+public:
+    int findPeakElement(vector<int>& nums) {
+        // special cases, a peak is at edge. Returns early
+        if(size(nums) == 1){
+            return 0 ;
+        }
+        if(nums[0]>nums[1]){
+            return (0) ;
+        }
+        if(nums[size(nums)-1]>nums[size(nums)-2]){
+            return (size(nums)-1) ;
+        }
+
+        // more common case, peak is in the middle
+        return bisection(nums) ;
+    }
+
+    int bisection(vector<int>& nums){
+        int highIndex ;
+        int lowIndex ;
+        int midIndex ;
+
+        highIndex = (int)size(nums)-1 ;
+        lowIndex = 0 ;
+        midIndex = highIndex/2 ;
+
+        while (highIndex - lowIndex > 2) {
+            if (nums.at(highIndex) > nums.at(lowIndex)){
+                if(nums.at(midIndex) > nums.at(lowIndex)){
+                    if(nums.at(midIndex) > nums.at(highIndex)){
+                        if(nums.at(midIndex) > nums[midIndex + 1]){
+                            //sloping down to the right, move high value to right of mid
+                            highIndex = midIndex + 1 ;
+                            nums.at(highIndex) = nums.at(highIndex) ;
+                        }
+
+                        if(nums.at(midIndex) > nums[midIndex - 1]){
+                            //sloping down to the left, move low value to left of mid
+                            lowIndex = midIndex - 1 ;
+                            nums.at(lowIndex) = nums.at(lowIndex) ;
+                        }
+                    }else{
+                        // either high value is a peak, or a number between high and mid is a peak
+                        lowIndex = midIndex ;
+                    }
+                }  
+                else
+                {
+                    // either low value is a peak, or a number between mid and low is a peak
+                    highIndex = midIndex ;
+                }
+            }       
+            else{
+                if(nums.at(midIndex) < nums.at(lowIndex)){
+                    // either low value is a peak, or a number between low and mid is a peak
+                    highIndex = midIndex ;
+                    nums.at(highIndex) = nums.at(midIndex) ;
+                }  
+                else{
+                   // mid value is potentially a peak, check slope
+                    if(nums.at(midIndex) > nums[midIndex + 1]){
+                        //sloping down to the right, move high value to right of mid
+                        highIndex = midIndex + 1 ;
+                    }
+
+                    if(nums.at(midIndex) > nums[midIndex - 1]){
+                        //sloping down to the left, move low value to left of mid
+                        lowIndex = midIndex - 1 ;
+                    }
+                }
+            }
+            if(lowIndex + (highIndex-lowIndex)/2 == midIndex)
+                midIndex++ ;
+            else 
+                midIndex = lowIndex + (highIndex-lowIndex)/2 ;
+        }
+        return ceil(lowIndex + highIndex)/2 ;
+    }
+
+    int max(int a, int b){
+        if (a<b)
+            return b;
+        else
+            return a;
+    }
+};
